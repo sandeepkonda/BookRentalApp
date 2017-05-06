@@ -1,7 +1,9 @@
 package com.library.rental.dao;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import com.library.rental.object.PopularBooks;
 import com.library.rental.util.SessionUtil;
@@ -10,7 +12,7 @@ public class PopularBooksDAO {
 	public void addBookRental(PopularBooks popularBooks) {
 		Session session = SessionUtil.getSession();        
         Transaction tx = session.beginTransaction();
-        session.save(popularBooks); 
+        session.saveOrUpdate(popularBooks); 
         tx.commit();
         session.close();
 	}
@@ -18,9 +20,13 @@ public class PopularBooksDAO {
 	public int getUserCount(String isbn) {
 		Session session = SessionUtil.getSession();        
         Transaction tx = session.beginTransaction();
-        PopularBooks popularBooks = (PopularBooks) session.get(PopularBooks.class, isbn); 
+        
+        Criteria criteria = session.createCriteria(PopularBooks.class);
+        PopularBooks popularBooks = (PopularBooks) criteria.add(Restrictions.eq("isbn", isbn))
+                                     .uniqueResult();
+        
         tx.commit();
         session.close();
-        return popularBooks.getUserCount();
+        return popularBooks != null ? popularBooks.getUserCount() : 0;
 	}
 }

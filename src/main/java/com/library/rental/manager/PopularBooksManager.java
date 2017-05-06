@@ -7,8 +7,11 @@ public class PopularBooksManager {
 	public void updatePopularBooks(PopularBooks popularBooks) {
 
 		PopularBooksDAO popularBooksDAO = new PopularBooksDAO();
-
+		int userCount = popularBooksDAO.getUserCount(popularBooks.getIsbn());
+		popularBooks.setUserCount(userCount + 1);
 		popularBooksDAO.addBookRental(popularBooks);
 
 	}
+	
+	
 }

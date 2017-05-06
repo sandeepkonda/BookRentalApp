@@ -52,28 +52,17 @@ public class BookRentalService {
 		BookRental bookRental = null;
 		try {
 			bookRental = new ObjectMapper().readValue(input, BookRental.class);
-			
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		BookRentalManager bookRentalManager = new BookRentalManager();
 		
 		bookRentalManager.rentBook(bookRental);
-		
-		
-        PopularBooksDAO popularBooksDAO = new PopularBooksDAO();
-        PopularBooks popularBooks = new PopularBooks();
-        popularBooks.setIsbn(bookRental.getIsbn());
-        popularBooks.setUserCount(1);
-        popularBooksDAO.addBookRental(popularBooks);
         
         return Response.status(201).entity("response: "+bookRental.getIsbn()).build(); 
     }

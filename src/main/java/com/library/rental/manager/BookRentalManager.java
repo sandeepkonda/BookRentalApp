@@ -17,8 +17,6 @@ public class BookRentalManager {
         popularBooks.setIsbn(bookRental.getIsbn());
         popularBooksManager.updatePopularBooks(popularBooks);
         
-        
-        		
 	}
 
 }
