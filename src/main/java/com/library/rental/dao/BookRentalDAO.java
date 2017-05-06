@@ -20,4 +20,9 @@ public class BookRentalDAO {
         session.close();
 	}
 
+	public void removeBookRental(BookRental bookRental) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

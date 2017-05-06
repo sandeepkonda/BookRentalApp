@@ -48,7 +48,7 @@ public class BookRentalService {
 	@Path("/rent")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response rentBook(String input){
+    public Response rentBook(String input) throws Exception{
 		BookRental bookRental = null;
 		try {
 			bookRental = new ObjectMapper().readValue(input, BookRental.class);
@@ -62,32 +62,31 @@ public class BookRentalService {
 		
 		BookRentalManager bookRentalManager = new BookRentalManager();
 		
-		bookRentalManager.rentBook(bookRental);
+		String message = bookRentalManager.rentBook(bookRental);
         
-        return Response.status(201).entity("response: "+bookRental.getIsbn()).build(); 
+        return Response.status(201).entity(message).build(); 
     }
 	
 	@Path("/return")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response returnBook(String input){
+    public Response returnBook(String input) throws Exception{
 		BookRental bookRental = null;
 		try {
 			bookRental = new ObjectMapper().readValue(input, BookRental.class);
 			
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		BookRentalDAO dao = new BookRentalDAO();
-        //dao.addBookRental(bookRental);
-        
+		
+		BookRentalManager bookRentalManager = new BookRentalManager();
+		
+		String message = bookRentalManager.returnBook(bookRental);
+		
         return Response.status(201).entity("response: "+bookRental.getIsbn()).build(); 
     }
 
