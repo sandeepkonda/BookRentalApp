@@ -1,18 +1,22 @@
 package com.library.rental.util;
 
+import com.library.rental.client.InventoryClient;
 import com.library.rental.object.BookRental;
 
 public class Utils {
 	public static boolean checkInventoy(String isbn) {
-		// TODO Call inventory service
-		///search/{isbn}
+		InventoryClient inventoryClient = new InventoryClient();
+		
+		inventoryClient.checkInventory(isbn);
+		
 		return true;
 	}
 
 
 	public static void decrementInventory(BookRental bookRental) {
-		// TODO Call inventory service
-		//
+		InventoryClient inventoryClient = new InventoryClient();
+		
+		inventoryClient.decrementInventory(bookRental.getIsbn());
 		
 	}
 	
