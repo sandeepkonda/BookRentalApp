@@ -1,5 +1,6 @@
 package com.library.rental.manager;
 
+import com.library.rental.client.BillingClient;
 import com.library.rental.dao.BookRentalDAO;
 import com.library.rental.object.BookRental;
 import com.library.rental.object.PopularBooks;
@@ -56,8 +57,11 @@ public class BookRentalManager {
 	}
 	
 	private void generateBill(BookRental bookRental) {
-		// TODO Call Billing Service
+		BillingClient billingClient = new BillingClient();
 		
+		int numberOfDaysRented = 3;
+		
+		billingClient.generateBill(bookRental.getIsbn(), numberOfDaysRented);
 	}
 
 	public void validateReturnBookInput(BookRental bookRental) throws Exception {

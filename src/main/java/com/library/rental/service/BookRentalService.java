@@ -87,7 +87,7 @@ public class BookRentalService {
 		
 		String message = bookRentalManager.returnBook(bookRental);
 		
-        return Response.status(201).entity("response: "+bookRental.getIsbn()).build(); 
+        return Response.status(201).entity(message).build(); 
     }
 
 } 
