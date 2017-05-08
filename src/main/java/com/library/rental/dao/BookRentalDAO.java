@@ -11,8 +11,6 @@ import com.library.rental.util.SessionUtil;
 public class BookRentalDAO {
 
 	public void addBookRental(BookRental bookRental) {
-		bookRental.setRentalDate(new Date());
-		bookRental.setSku("sku1");
 		Session session = SessionUtil.getSession();        
         Transaction tx = session.beginTransaction();
         session.save(bookRental); 
@@ -20,7 +18,7 @@ public class BookRentalDAO {
         session.close();
 	}
 
-	public void removeBookRental(BookRental bookRental) {
+	public void removeBookRental(BookRental bookRental, Date returnDate) {
 		// TODO Auto-generated method stub
 		
 	}
