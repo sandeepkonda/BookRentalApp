@@ -18,8 +18,12 @@ public class BookRentalDAO {
         session.close();
 	}
 
-	public void removeBookRental(BookRental bookRental, Date returnDate) {
-		// TODO Auto-generated method stub
+	public void removeBookRental(BookRental bookRental) {
+		Session session = SessionUtil.getSession();        
+        Transaction tx = session.beginTransaction();
+        session.update(bookRental); 
+        tx.commit();
+        session.close();
 		
 	}
 

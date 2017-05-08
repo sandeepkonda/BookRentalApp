@@ -52,11 +52,12 @@ public class BookRentalManager {
 
 	public String returnBook(BookRental bookRental) throws Exception {
 		
-		Date returnDate = new Date();
 		validateReturnBookInput(bookRental);
-		
+
+		Date returnDate = new Date();
+		bookRental.setReturnDate(returnDate);
 		BookRentalDAO bookRentalDAO = new BookRentalDAO();
-        bookRentalDAO.removeBookRental(bookRental, returnDate);
+        bookRentalDAO.removeBookRental(bookRental);
 		
         Utils.incrementInventory(bookRental);
         
