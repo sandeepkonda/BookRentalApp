@@ -12,7 +12,7 @@ import com.library.rental.util.Utils;
 
 public class BookRentalManager {
 
-	public String rentBook(BookRental bookRental) throws Exception {
+	public void rentBook(BookRental bookRental) throws Exception {
 
 		validateRentBookInput(bookRental);
 		
@@ -21,7 +21,7 @@ public class BookRentalManager {
 		int quantity = (int) bookFromInv.get(BookRentalConstants.QUANTITY);
 		
 		if(quantity < 1) {
-			return "Book "+bookRental.getIsbn()+" is not available";
+			throw new Exception("Book "+bookRental.getIsbn()+" is not available");
 		}
 		
 		bookRental.setSku(BookRentalConstants.SKU);
@@ -35,22 +35,20 @@ public class BookRentalManager {
         
         popularBooksManager.updatePopularBooks(bookRental.getIsbn());
         
-        return "Success";
-        
 	}
 
-	private void validateRentBookInput(BookRental bookRental) throws Exception {
+	private void validateRentBookInput(BookRental bookRental) throws IllegalArgumentException {
 		if(bookRental.getIsbn() == null) {
-			throw new Exception("Required input missing: "+BookRentalConstants.ISBN);
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.ISBN);
 		}
 		
 		else if(bookRental.getUserId() == null) {
-			throw new Exception("Required input missing: "+BookRentalConstants.USER_ID);
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.USER_ID);
 		}
 	
 	}
 
-	public String returnBook(BookRental bookRental) throws Exception {
+	public void returnBook(BookRental bookRental) throws Exception {
 		
 		validateReturnBookInput(bookRental);
 
@@ -58,7 +56,7 @@ public class BookRentalManager {
 		
 		BookRental bookRentalFromDB = bookRentalDAO.getBookRental(bookRental);
 		if(bookRentalFromDB == null) {
-			return "User "+bookRental.getUserId()+" has not rented out book "+bookRental.getIsbn();
+			throw new Exception("User "+bookRental.getUserId()+" has not rented out book "+bookRental.getIsbn());
 		}
 		
 		bookRentalFromDB.setReturnDate(new Date());
@@ -68,8 +66,6 @@ public class BookRentalManager {
         Utils.incrementInventory(bookRentalFromDB);
         
         generateBill(bookRentalFromDB);
-        
-		return "Success";
 	}
 	
 	private void generateBill(BookRental bookRental) {
@@ -81,17 +77,17 @@ public class BookRentalManager {
 		billingClient.generateBill(bookRental.getUserId(), bookRental.getIsbn(), numberOfDaysRented);
 	}
 
-	public void validateReturnBookInput(BookRental bookRental) throws Exception {
+	public void validateReturnBookInput(BookRental bookRental) throws IllegalArgumentException {
 		if(bookRental.getIsbn() == null) {
-			throw new Exception("Required input missing: "+BookRentalConstants.ISBN);
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.ISBN);
 		}
 		
 		else if(bookRental.getSku() == null) {
-			throw new Exception("Required input missing: "+BookRentalConstants.SKU);
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.SKU);
 		}
 		
 		else if(bookRental.getUserId() == null) {
-			throw new Exception("Required input missing: "+BookRentalConstants.USER_ID);
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.USER_ID);
 		}
 		
 	}
