@@ -2,15 +2,15 @@ package com.library.rental.manager;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.library.rental.client.BillingClient;
 import com.library.rental.dao.BookRentalDAO;
 import com.library.rental.object.BookRental;
+import com.library.rental.util.BookRentalConstants;
 import com.library.rental.util.Utils;
 
 public class BookRentalManager {
-	public static String INVENTORY_QUANTITY = "quantity";
-	public static String INVENTORY_SKU = "sku";
 
 	public String rentBook(BookRental bookRental) throws Exception {
 
@@ -18,13 +18,13 @@ public class BookRentalManager {
 		
 		
 		Map<String, Object> bookFromInv = Utils.getBookFromInventory(bookRental.getIsbn());
-		int quantity = (int) bookFromInv.get(INVENTORY_QUANTITY);
+		int quantity = (int) bookFromInv.get(BookRentalConstants.QUANTITY);
 		
 		if(quantity < 1) {
 			return "Book "+bookRental.getIsbn()+" is not available";
 		}
 		
-		bookRental.setSku(INVENTORY_SKU);
+		bookRental.setSku(BookRentalConstants.SKU);
 		bookRental.setRentalDate(new Date());
 		BookRentalDAO bookRentalDAO = new BookRentalDAO();
         bookRentalDAO.addBookRental(bookRental);
@@ -41,11 +41,11 @@ public class BookRentalManager {
 
 	private void validateRentBookInput(BookRental bookRental) throws Exception {
 		if(bookRental.getIsbn() == null) {
-			throw new Exception("Required input missing: isbn");
+			throw new Exception("Required input missing: "+BookRentalConstants.ISBN);
 		}
 		
 		else if(bookRental.getUserId() == null) {
-			throw new Exception("Required input missing: userId");
+			throw new Exception("Required input missing: "+BookRentalConstants.USER_ID);
 		}
 	
 	}
@@ -54,33 +54,44 @@ public class BookRentalManager {
 		
 		validateReturnBookInput(bookRental);
 
-		Date returnDate = new Date();
-		bookRental.setReturnDate(returnDate);
 		BookRentalDAO bookRentalDAO = new BookRentalDAO();
-        bookRentalDAO.removeBookRental(bookRental);
 		
-        Utils.incrementInventory(bookRental);
+		BookRental bookRentalFromDB = bookRentalDAO.getBookRental(bookRental);
+		if(bookRentalFromDB == null) {
+			return "User "+bookRental.getUserId()+" has not rented out book "+bookRental.getIsbn();
+		}
+		
+		bookRentalFromDB.setReturnDate(new Date());
+
+		bookRentalDAO.removeBookRental(bookRentalFromDB);
+		
+        Utils.incrementInventory(bookRentalFromDB);
         
-        generateBill(bookRental, returnDate);
+        generateBill(bookRentalFromDB);
         
 		return "Success";
 	}
 	
-	private void generateBill(BookRental bookRental, Date returnDate) {
+	private void generateBill(BookRental bookRental) {
 		BillingClient billingClient = new BillingClient();
 		
-		int numberOfDaysRented = 3;
+		long diff = bookRental.getReturnDate().getTime() - bookRental.getRentalDate().getTime();
+		long numberOfDaysRented = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 		
 		billingClient.generateBill(bookRental.getUserId(), bookRental.getIsbn(), numberOfDaysRented);
 	}
 
 	public void validateReturnBookInput(BookRental bookRental) throws Exception {
 		if(bookRental.getIsbn() == null) {
-			throw new Exception("Required input missing: isbn");
+			throw new Exception("Required input missing: "+BookRentalConstants.ISBN);
 		}
 		
 		else if(bookRental.getSku() == null) {
-			throw new Exception("Required input missing: sku");
+			throw new Exception("Required input missing: "+BookRentalConstants.SKU);
+		}
+		
+		else if(bookRental.getUserId() == null) {
+			throw new Exception("Required input missing: "+BookRentalConstants.USER_ID);
 		}
 		
 	}

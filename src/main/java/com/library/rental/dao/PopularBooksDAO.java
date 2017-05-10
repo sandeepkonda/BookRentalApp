@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import com.library.rental.object.PopularBooks;
+import com.library.rental.util.BookRentalConstants;
 import com.library.rental.util.SessionUtil;
 
 public class PopularBooksDAO {
@@ -22,7 +23,7 @@ public class PopularBooksDAO {
         Transaction tx = session.beginTransaction();
         
         Criteria criteria = session.createCriteria(PopularBooks.class);
-        PopularBooks popularBooks = (PopularBooks) criteria.add(Restrictions.eq("isbn", isbn))
+        PopularBooks popularBooks = (PopularBooks) criteria.add(Restrictions.eq(BookRentalConstants.ISBN, isbn))
                                      .uniqueResult();
         
         tx.commit();

@@ -15,15 +15,16 @@ public class BillingClient {
 	//TODO dynamically get service IP address
 	String host = "http://10.132.126.48:8080/IVM/webapi/billingManagement/";
 
-	public void generateBill(String isbn, String userId, int numberOfDaysRented) {
+	public void generateBill(String isbn, String userId, long numberOfDaysRented) {
 		Client client = Client.create();
 
 		WebResource webResource = client
-		   .resource(host+"update");
+		   .resource(host+"create");
 		
 		
 		ClientResponse response = webResource.type("application/json")
-                   .put(ClientResponse.class, "{\"status\":\"rent\"}");
+                   .post(ClientResponse.class, 
+                		   "{\"isbn\":\""+isbn+"\", \"userId\":\""+userId+"\", \"numberOfDaysRented\":\""+numberOfDaysRented+"\"}");
 
 		if (response.getStatus() != 200) {
 		   throw new RuntimeException("Failed : HTTP error code : "

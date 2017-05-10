@@ -14,11 +14,8 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.library.rental.dao.BookRentalDAO;
-import com.library.rental.dao.PopularBooksDAO;
 import com.library.rental.manager.BookRentalManager;
 import com.library.rental.object.BookRental;
-import com.library.rental.object.PopularBooks;
 
 
 @Path("/bookrental")

@@ -15,7 +15,6 @@ public class Utils {
 		
 		String inventory = inventoryClient.checkInventory(isbn);
 		Map<String, Object> map = null;
-		int quantity = 0;
 		try {
 			map = new ObjectMapper().readValue(inventory, new TypeReference<Map<String, Object>>() {
 			});
