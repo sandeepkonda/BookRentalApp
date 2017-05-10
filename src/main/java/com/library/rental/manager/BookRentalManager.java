@@ -1,6 +1,8 @@
 package com.library.rental.manager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -90,6 +92,23 @@ public class BookRentalManager {
 			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.USER_ID);
 		}
 		
+	}
+
+	public List<String> getBookRentalInfoOfUser(String userId) {
+		if(userId == null) {
+			throw new IllegalArgumentException("Required input missing: "+BookRentalConstants.USER_ID);
+		}
+		
+		BookRentalDAO bookRentalDAO = new BookRentalDAO();
+		
+		List<BookRental> userBooksList = bookRentalDAO.getBookRentalInfoOfUser(userId);
+		
+		List<String> userBooksIsbn = new ArrayList<String>();
+		for(BookRental popularBooks : userBooksList){
+			userBooksIsbn.add(popularBooks.getIsbn());
+		}
+		 
+		return userBooksIsbn;
 	}
 
 	

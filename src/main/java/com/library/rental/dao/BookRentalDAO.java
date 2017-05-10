@@ -1,5 +1,7 @@
 package com.library.rental.dao;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -43,6 +45,20 @@ public class BookRentalDAO {
         tx.commit();
         session.close();
         return bookRentalFromDB;
+	}
+
+	public List<BookRental> getBookRentalInfoOfUser(String userId) {
+		Session session = SessionUtil.getSession();        
+        Transaction tx = session.beginTransaction();
+        
+        Criteria criteria = session.createCriteria(BookRental.class);
+        List<BookRental> userBooks = (List<BookRental>) criteria
+        		.add(Restrictions.eq(BookRentalConstants.USER_ID, userId))
+        		.add(Restrictions.isNull(BookRentalConstants.RETURN_DATE)).list();
+        
+        tx.commit();
+        session.close();
+        return userBooks;
 	}
 
 }

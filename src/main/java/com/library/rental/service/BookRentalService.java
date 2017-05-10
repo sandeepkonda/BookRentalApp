@@ -37,17 +37,22 @@ public class BookRentalService {
 
 	@Path("/users/{userId}")
 	@GET
-	//@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo(@PathParam("userId") String userId) {
-		return "TODO: Get User info"+userId; 
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUserInfo(@PathParam("userId") String userId) {
+		BookRentalManager bookRentalManager = new BookRentalManager();
+		
+		List<String> response = bookRentalManager.getBookRentalInfoOfUser(userId);
+		
+		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
 
-	@Path("/users")
+	//TODO
+	/*@Path("/users")
 	@GET
 	//@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo() {
+	public Response getUserInfo() {
 		return getUserInfo(null); 
-	}
+	}*/
 
 	@Path("/rent")
 	@POST
