@@ -1,6 +1,7 @@
 package com.library.rental.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,11 +26,11 @@ public class BookRentalService {
 
 	@Path("/popularBooks")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.APPLICATION_JSON })
 	public Response popularBooks() {
 		PopularBooksManager popularBooksManager = new PopularBooksManager();
 
-		String response = popularBooksManager.getPopularBook();
+		List<String> response = popularBooksManager.getPopularBook();
 
 		return Response.ok(response, MediaType.APPLICATION_JSON).build();
 	}
